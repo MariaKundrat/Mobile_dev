@@ -68,54 +68,119 @@ class _CounterScreenState extends State<_CounterScreen> {
       ),
       backgroundColor: const Color(0xFFC1E1FF),
       body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    'assets/capybara.jpg',
-                    width: 300,
-                    height: 300,
-                    fit: BoxFit.cover,
-                  ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  'assets/capybara.jpg',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.cover,
                 ),
-                Text(
-                  '$_counter',
-                  style: TextStyle(
-                    fontSize: 45,
+              ),
+              Text(
+                '$_counter',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: _textColor,
+                  fontSize: 45,
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _controller,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Count your cents',
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _handleInput,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 50,
+                    vertical: 15,
+                  ),
+                  textStyle: const TextStyle(
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
-                    color: _textColor,
                   ),
                 ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: _controller,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Count your cents',
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _handleInput,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 50,
-                      vertical: 15,
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
+                child: const Text('+'),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.blue,
+                      maxRadius: 30,
                     ),
                   ),
-                  child: const Text('+'),
-                ),
-              ],
-            ),
+                  // const SizedBox(width: 20),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.blue,
+                      maxRadius: 30,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        maxRadius: 20,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Container(
+                      width: 20,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(90),
+                          topLeft: Radius.circular(90),
+                        ),
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          width: 15,
+                          height: 35,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(1000),
+                              topLeft: Radius.circular(1000),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Container(
+                      width: 10,
+                      height: 5,
+                      decoration: const BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(90),
+                          topLeft: Radius.circular(90),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
