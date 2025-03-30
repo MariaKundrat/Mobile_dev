@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lab1/services/auth_service.dart';
 import 'package:lab1/widgets/custom_button.dart';
 import 'package:lab1/widgets/topwave_clipper.dart';
 
@@ -20,10 +21,7 @@ class ProfileScreen extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  Color(0xFF009FFD),
-                  Color(0xFF2A2A72),
-                ],
+                colors: [Color(0xFF009FFD), Color(0xFF2A2A72)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -37,6 +35,7 @@ class ProfileScreen extends StatelessWidget {
               clipper: TopWaveClipper(),
               child: Container(
                 height: 300,
+                // ignore: deprecated_member_use
                 color: Colors.white.withOpacity(0.2),
               ),
             ),
@@ -49,6 +48,7 @@ class ProfileScreen extends StatelessWidget {
               clipper: BottomWaveClipper(),
               child: Container(
                 height: 250,
+                // ignore: deprecated_member_use
                 color: Colors.white.withOpacity(0.15),
               ),
             ),
@@ -73,7 +73,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       const Text(
-                        'Maryk Huyaryk',
+                        'Maryk',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -82,10 +82,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const Text(
                         'maryk@gmail.com',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white70,
-                        ),
+                        style: TextStyle(fontSize: 16, color: Colors.white70),
                       ),
                       const SizedBox(height: 30),
                       const _ProfileInfoItem(
@@ -116,6 +113,7 @@ class ProfileScreen extends StatelessWidget {
                         text: 'Log Out',
                         backgroundColor: Colors.lightGreen,
                         onPressed: () {
+                          AuthService.logout();
                           Navigator.pushReplacementNamed(context, '/login');
                         },
                       ),
@@ -146,6 +144,7 @@ class _ProfileInfoItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
+        // ignore: deprecated_member_use
         backgroundColor: Colors.white.withOpacity(0.3),
         child: Icon(icon, color: Colors.white),
       ),
@@ -156,12 +155,12 @@ class _ProfileInfoItem extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      subtitle: Text(
-        subtitle,
-        style: const TextStyle(color: Colors.white70),
+      subtitle: Text(subtitle, style: const TextStyle(color: Colors.white70)),
+      trailing: const Icon(
+        Icons.arrow_forward_ios,
+        size: 16,
+        color: Colors.white70,
       ),
-      trailing:
-          const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white70),
       onTap: () {},
     );
   }

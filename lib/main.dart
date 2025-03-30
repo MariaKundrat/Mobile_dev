@@ -5,13 +5,24 @@ import 'package:lab1/screens/login_screen.dart';
 import 'package:lab1/screens/profile_screen.dart';
 import 'package:lab1/screens/register_screen.dart';
 import 'package:lab1/screens/settings_screen.dart';
+import 'package:lab1/services/auth_service.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final bool isLoggedIn = await AuthService.isUserLoggedIn();
+
+  bool autoLoginSuccessful = false;
+  if (isLoggedIn) {
+    autoLoginSuccessful = await AuthService.loginWithSavedCredentials();
+  }
+
+  runApp(MyApp(isLoggedIn: isLoggedIn && autoLoginSuccessful));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+  const MyApp({required this.isLoggedIn, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +42,7 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      initialRoute: '/login',
+      initialRoute: isLoggedIn ? '/home' : '/login',
       routes: {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
