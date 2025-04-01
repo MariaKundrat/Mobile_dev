@@ -93,10 +93,12 @@ class GlassContainer extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
+            // ignore: deprecated_member_use
             color: Colors.white.withOpacity(0.2),
             borderRadius: BorderRadius.circular(borderRadius),
             border: Border.all(
               width: 1.5,
+              // ignore: deprecated_member_use
               color: Colors.white.withOpacity(0.3),
             ),
           ),

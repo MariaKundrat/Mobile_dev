@@ -26,6 +26,7 @@ class TemperatureCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
           colors: [
+            // ignore: deprecated_member_use
             (backgroundColor ?? Colors.lightBlue).withOpacity(0.7),
             (backgroundColor ?? Colors.lightBlue),
           ],
@@ -34,6 +35,7 @@ class TemperatureCard extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.2),
             blurRadius: 15,
             offset: const Offset(0, 8),
@@ -48,17 +50,11 @@ class TemperatureCard extends StatelessWidget {
             children: [
               Text(
                 location,
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 16,
-                ),
+                style: const TextStyle(color: Colors.white70, fontSize: 16),
               ),
               if (iconData != null)
-                Icon(
-                  iconData,
-                  color: Colors.white.withOpacity(0.7),
-                  size: 30,
-                ),
+                // ignore: deprecated_member_use
+                Icon(iconData, color: Colors.white.withOpacity(0.7), size: 30),
             ],
           ),
           const SizedBox(height: 8),
@@ -77,10 +73,7 @@ class TemperatureCard extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 unit,
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 28,
-                ),
+                style: const TextStyle(color: Colors.white70, fontSize: 28),
               ),
             ],
           ),
