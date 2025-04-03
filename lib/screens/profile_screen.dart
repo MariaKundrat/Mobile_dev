@@ -35,8 +35,7 @@ class ProfileScreen extends StatelessWidget {
               clipper: TopWaveClipper(),
               child: Container(
                 height: 300,
-                // ignore: deprecated_member_use
-                color: Colors.white.withOpacity(0.2),
+                color: const Color.fromRGBO(255, 255, 255, 0.2),
               ),
             ),
           ),
@@ -48,8 +47,7 @@ class ProfileScreen extends StatelessWidget {
               clipper: BottomWaveClipper(),
               child: Container(
                 height: 250,
-                // ignore: deprecated_member_use
-                color: Colors.white.withOpacity(0.15),
+                color: const Color.fromRGBO(255, 255, 255, 0.15),
               ),
             ),
           ),
@@ -144,8 +142,7 @@ class _ProfileInfoItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
-        // ignore: deprecated_member_use
-        backgroundColor: Colors.white.withOpacity(0.3),
+        backgroundColor: const Color.fromRGBO(255, 255, 255, 0.3),
         child: Icon(icon, color: Colors.white),
       ),
       title: Text(

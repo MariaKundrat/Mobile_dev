@@ -26,19 +26,22 @@ class TemperatureCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
           colors: [
-            // ignore: deprecated_member_use
-            (backgroundColor ?? Colors.lightBlue).withOpacity(0.7),
-            (backgroundColor ?? Colors.lightBlue),
+            Color.fromRGBO(
+              ((backgroundColor ?? Colors.lightBlue).r * 255).toInt(),
+              ((backgroundColor ?? Colors.lightBlue).g * 255).toInt(),
+              ((backgroundColor ?? Colors.lightBlue).b * 255).toInt(),
+              0.7,
+            ),
+            backgroundColor ?? Colors.lightBlue,
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         boxShadow: [
-          BoxShadow(
-            // ignore: deprecated_member_use
-            color: Colors.black.withOpacity(0.2),
+          const BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.2),
             blurRadius: 15,
-            offset: const Offset(0, 8),
+            offset: Offset(0, 8),
           ),
         ],
       ),
@@ -53,8 +56,11 @@ class TemperatureCard extends StatelessWidget {
                 style: const TextStyle(color: Colors.white70, fontSize: 16),
               ),
               if (iconData != null)
-                // ignore: deprecated_member_use
-                Icon(iconData, color: Colors.white.withOpacity(0.7), size: 30),
+                Icon(
+                  iconData,
+                  color: const Color.fromRGBO(255, 255, 255, 0.7),
+                  size: 30,
+                ),
             ],
           ),
           const SizedBox(height: 8),

@@ -53,8 +53,7 @@ class CustomTextField extends StatelessWidget {
               prefixIcon != null
                   ? Icon(prefixIcon, color: iconColor ?? Colors.black)
                   : null,
-          // ignore: deprecated_member_use
-          fillColor: Colors.white.withOpacity(0.2),
+          fillColor: const Color.fromRGBO(255, 255, 255, 0.2),
           filled: true,
         ),
       ),
