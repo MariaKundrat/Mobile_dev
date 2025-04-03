@@ -27,9 +27,9 @@ class TemperatureCard extends StatelessWidget {
         gradient: LinearGradient(
           colors: [
             Color.fromRGBO(
-              ((backgroundColor ?? Colors.lightBlue).r * 255).toInt(),
-              ((backgroundColor ?? Colors.lightBlue).g * 255).toInt(),
-              ((backgroundColor ?? Colors.lightBlue).b * 255).toInt(),
+              (backgroundColor?.r ?? Colors.lightBlue.r).toInt(),
+              (backgroundColor?.g ?? Colors.lightBlue.g).toInt(),
+              (backgroundColor?.b ?? Colors.lightBlue.b).toInt(),
               0.7,
             ),
             backgroundColor ?? Colors.lightBlue,
