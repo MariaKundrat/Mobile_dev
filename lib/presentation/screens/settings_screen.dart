@@ -17,9 +17,7 @@ class SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
+      appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -47,9 +45,9 @@ class SettingsScreenState extends State<SettingsScreen> {
           CustomButton(
             text: 'Save Settings',
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Settings saved')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Settings saved')));
             },
           ),
         ],

@@ -127,16 +127,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 30),
                   CustomButton(
                     text: 'Register',
-                    onPressed: _isFormValid
-                        ? () {
-                            if (_formKey.currentState!.validate()) {
-                              Navigator.pushReplacementNamed(
-                                context,
-                                '/home',
-                              );
+                    onPressed:
+                        _isFormValid
+                            ? () {
+                              if (_formKey.currentState!.validate()) {
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  '/home',
+                                );
+                              }
                             }
-                          }
-                        : () {},
+                            : () {},
                   ),
                   const SizedBox(height: 20),
                   Row(

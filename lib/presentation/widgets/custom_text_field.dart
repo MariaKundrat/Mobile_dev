@@ -49,9 +49,10 @@ class CustomTextField extends StatelessWidget {
           ),
           labelText: labelText,
           labelStyle: labelStyle ?? const TextStyle(color: Colors.black),
-          prefixIcon: prefixIcon != null
-              ? Icon(prefixIcon, color: iconColor ?? Colors.black)
-              : null,
+          prefixIcon:
+              prefixIcon != null
+                  ? Icon(prefixIcon, color: iconColor ?? Colors.black)
+                  : null,
           fillColor: const Color.fromRGBO(255, 255, 255, 0.2),
           filled: true,
         ),

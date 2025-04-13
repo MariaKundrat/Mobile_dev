@@ -70,16 +70,17 @@ class LoginScreenState extends State<LoginScreen> {
   void _showErrorDialog(String message) {
     showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Error'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Error'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -149,8 +150,9 @@ class LoginScreenState extends State<LoginScreen> {
                       children: [
                         Checkbox(
                           value: _rememberMe,
-                          onChanged: (value) =>
-                              setState(() => _rememberMe = value ?? true),
+                          onChanged:
+                              (value) =>
+                                  setState(() => _rememberMe = value ?? true),
                           fillColor: WidgetStateProperty.all(Colors.lightBlue),
                         ),
                         const Text(
@@ -163,8 +165,8 @@ class LoginScreenState extends State<LoginScreen> {
                     CustomButton(
                       text: 'Sign up',
                       backgroundColor: Colors.blue,
-                      onPressed: () =>
-                          Navigator.pushNamed(context, '/register'),
+                      onPressed:
+                          () => Navigator.pushNamed(context, '/register'),
                     ),
                   ],
                 ),
