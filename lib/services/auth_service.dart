@@ -45,7 +45,9 @@ class AuthService {
   }
 
   static Future<bool> validateCredentials(
-      String username, String password,) async {
+    String username,
+    String password,
+  ) async {
     final user = await _repository.login(username, password);
     return user != null;
   }

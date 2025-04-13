@@ -170,8 +170,7 @@ class LoginScreenState extends State<LoginScreen> {
                           value: _rememberMe,
                           onChanged: (value) =>
                               setState(() => _rememberMe = value ?? true),
-                          fillColor:
-                              WidgetStateProperty.all(Colors.lightBlue),
+                          fillColor: WidgetStateProperty.all(Colors.lightBlue),
                         ),
                         const Text(
                           'Remember me',
@@ -182,7 +181,8 @@ class LoginScreenState extends State<LoginScreen> {
                     _isLoading
                         ? const Center(
                             child:
-                                CircularProgressIndicator(color: Colors.white),)
+                                CircularProgressIndicator(color: Colors.white),
+                          )
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [

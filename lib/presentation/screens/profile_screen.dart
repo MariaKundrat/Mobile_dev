@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lab1/domain/entities/user.dart';
 import 'package:lab1/presentation/widgets/custom_button.dart';
+import 'package:lab1/presentation/widgets/profile_info_item.dart';
 import 'package:lab1/presentation/widgets/topwave_clipper.dart';
 import 'package:lab1/services/auth_service.dart';
 
@@ -250,25 +251,25 @@ class ProfileScreenState extends State<ProfileScreen> {
                               _buildUserInfo(),
                               const SizedBox(height: 30),
                               if (!_isEditing) ...[
-                                const _ProfileInfoItem(
+                                const ProfileInfoItem(
                                   icon: Icons.account_balance,
                                   title: 'Account',
                                   subtitle: 'Personal details',
                                 ),
                                 const Divider(color: Colors.white54),
-                                const _ProfileInfoItem(
+                                const ProfileInfoItem(
                                   icon: Icons.settings,
                                   title: 'Settings',
                                   subtitle: 'App settings, notifications',
                                 ),
                                 const Divider(color: Colors.white54),
-                                const _ProfileInfoItem(
+                                const ProfileInfoItem(
                                   icon: Icons.insights,
                                   title: 'Statistics',
                                   subtitle: 'Spending analysis, crashers',
                                 ),
                                 const Divider(color: Colors.white54),
-                                const _ProfileInfoItem(
+                                const ProfileInfoItem(
                                   icon: Icons.help,
                                   title: 'Help Center',
                                   subtitle: 'FAQ, contact support',
@@ -298,74 +299,4 @@ class ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-}
-
-class _ProfileInfoItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-
-  const _ProfileInfoItem({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: const Color.fromRGBO(255, 255, 255, 0.3),
-        child: Icon(icon, color: Colors.white),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-      ),
-      subtitle: Text(subtitle, style: const TextStyle(color: Colors.white70)),
-      trailing: const Icon(
-        Icons.arrow_forward_ios,
-        size: 16,
-        color: Colors.white70,
-      ),
-      onTap: () {},
-    );
-  }
-}
-
-class BottomWaveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.moveTo(0, size.height);
-    path.lineTo(0, size.height * 0.3);
-
-    final firstControlPoint = Offset(size.width * 0.25, size.height * 0.1);
-    final firstEndPoint = Offset(size.width * 0.5, size.height * 0.3);
-    path.quadraticBezierTo(
-      firstControlPoint.dx,
-      firstControlPoint.dy,
-      firstEndPoint.dx,
-      firstEndPoint.dy,
-    );
-
-    final secondControlPoint = Offset(size.width * 0.75, size.height * 0.5);
-    final secondEndPoint = Offset(size.width, size.height * 0.3);
-    path.quadraticBezierTo(
-      secondControlPoint.dx,
-      secondControlPoint.dy,
-      secondEndPoint.dx,
-      secondEndPoint.dy,
-    );
-
-    path.lineTo(size.width, size.height);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
