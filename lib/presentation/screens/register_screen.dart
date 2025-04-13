@@ -41,18 +41,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final email = _emailController.text.trim();
       final password = _passwordController.text;
 
-      if (email.isEmpty || !email.contains('@')) {
-        _showErrorDialog('Incorrect email format');
-        return;
-      }
+      final validationError = await AuthService.validateCredentials(
+        _emailController.text,
+        _passwordController.text,
+      );
 
-      if (name.isEmpty || name.contains(RegExp(r'[0-9]'))) {
-        _showErrorDialog('The name cannot be empty or contain numbers.');
-        return;
-      }
-
-      if (password.length < 6) {
-        _showErrorDialog('Password must contain at least 6 characters');
+      if (validationError) {
+        _showErrorDialog(validationError as String);
         return;
       }
 
@@ -193,14 +188,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onChanged: (_) => _validateForm(),
                   ),
                   const SizedBox(height: 30),
-                  _isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(color: Colors.white),
-                        )
-                      : CustomButton(
-                          text: 'Register',
-                          onPressed: _isFormValid ? () => _register() : null,
-                        ),
+                  if (_isLoading)
+                    const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    )
+                  else
+                    CustomButton(
+                      text: 'Register',
+                      onPressed: _isFormValid && !_isLoading ? _register : null,
+                    ),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

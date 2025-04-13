@@ -6,10 +6,10 @@ class ProfileInfoItem extends StatelessWidget {
   final String subtitle;
 
   const ProfileInfoItem({
-    super.key,
     required this.icon,
     required this.title,
     required this.subtitle,
+    super.key,
   });
 
   @override

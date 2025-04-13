@@ -27,12 +27,17 @@ class LoginLogic {
       return Future.value('Password must contain at least 6 characters');
     }
 
-    return Future.value(null);
+    return Future.value();
   }
 
   Future<bool> register(String email, String name, String password) async {
     final validationError = await validateRegistration(email, name, password);
     if (validationError != null) {
+      return false;
+    }
+
+    final existingUser = await _repository.login(email, password);
+    if (existingUser != null) {
       return false;
     }
 

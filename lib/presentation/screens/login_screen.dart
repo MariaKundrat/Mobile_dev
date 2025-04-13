@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lab1/logic/login_logic.dart';
 import 'package:lab1/presentation/widgets/custom_button.dart';
 import 'package:lab1/services/auth_service.dart';
 
@@ -48,36 +49,25 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
-    final username = _usernameController.text.trim();
+    final email = _usernameController.text.trim();
     final password = _passwordController.text.trim();
-
-    if (username.isEmpty || password.isEmpty) {
-      _showErrorDialog('Please enter both username and password');
-      return;
-    }
+    final logic = LoginLogic();
 
     setState(() => _isLoading = true);
 
     try {
-      final savedUsername = await AuthService.getUsername();
+      final success = await logic.login(email, password);
+      if (success) {
+        if (_rememberMe) {
+          await AuthService.saveCredentials(email, password);
+          await AuthService.setLoggedIn(true);
+        }
 
-      if (savedUsername == null) {
-        await AuthService.saveCredentials(username, password);
-        await AuthService.setLoggedIn(_rememberMe);
         if (mounted) {
           Navigator.pushReplacementNamed(context, '/home');
         }
       } else {
-        final isValid =
-            await AuthService.validateCredentials(username, password);
-        if (isValid) {
-          await AuthService.setLoggedIn(_rememberMe);
-          if (mounted) {
-            Navigator.pushReplacementNamed(context, '/home');
-          }
-        } else {
-          _showErrorDialog('Invalid username or password');
-        }
+        _showErrorDialog('Invalid email or password');
       }
     } catch (e) {
       _showErrorDialog('Login error: $e');
@@ -178,23 +168,24 @@ class LoginScreenState extends State<LoginScreen> {
                         ),
                       ],
                     ),
-                    _isLoading
-                        ? const Center(
-                            child:
-                                CircularProgressIndicator(color: Colors.white),
-                          )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              CustomButton(text: 'Log in', onPressed: _login),
-                              CustomButton(
-                                text: 'Sign up',
-                                backgroundColor: Colors.blue,
-                                onPressed: () =>
-                                    Navigator.pushNamed(context, '/register'),
-                              ),
-                            ],
+                    if (_isLoading)
+                      const Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      )
+                    else
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          CustomButton(text: 'Log in', onPressed: _login),
+                          const SizedBox(height: 20),
+                          CustomButton(
+                            text: 'Sign up',
+                            backgroundColor: Colors.blue,
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/register'),
                           ),
+                        ],
+                      ),
                   ],
                 ),
               ),

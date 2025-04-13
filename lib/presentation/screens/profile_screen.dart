@@ -40,6 +40,7 @@ class ProfileScreenState extends State<ProfileScreen> {
 
     try {
       final user = await AuthService.getCurrentUser();
+      if (!mounted) return;
       setState(() {
         _user = user;
         if (user != null) {
@@ -73,6 +74,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       );
 
       await AuthService.updateUser(updatedUser);
+      if (!mounted) return;
 
       setState(() {
         _user = updatedUser;
@@ -262,12 +264,12 @@ class ProfileScreenState extends State<ProfileScreen> {
                                   title: 'Settings',
                                   subtitle: 'App settings, notifications',
                                 ),
-                                const Divider(color: Colors.white54),
-                                const ProfileInfoItem(
-                                  icon: Icons.insights,
-                                  title: 'Statistics',
-                                  subtitle: 'Spending analysis, crashers',
-                                ),
+                                // const Divider(color: Colors.white54),
+                                // const ProfileInfoItem(
+                                //   icon: Icons.insights,
+                                //   title: 'Statistics',
+                                //   subtitle: 'Spending analysis, crashers',
+                                // ),
                                 const Divider(color: Colors.white54),
                                 const ProfileInfoItem(
                                   icon: Icons.help,

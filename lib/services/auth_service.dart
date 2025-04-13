@@ -35,13 +35,6 @@ class AuthService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_usernameKey, username);
     await prefs.setString(_passwordKey, password);
-
-    final user = User(
-      email: username,
-      name: 'User',
-      password: password,
-    );
-    await _repository.register(user);
   }
 
   static Future<bool> validateCredentials(
