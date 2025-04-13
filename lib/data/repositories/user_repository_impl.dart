@@ -1,6 +1,6 @@
-import '../../domain/entities/user.dart';
-import '../../domain/repositories/user_repository.dart';
-import '../local/user_local_storage.dart';
+import 'package:lab1/data/local/user_local_storage.dart';
+import 'package:lab1/domain/entities/user.dart';
+import 'package:lab1/domain/repositories/user_repository.dart';
 
 class UserRepositoryImpl implements UserRepository {
   final UserLocalStorage storage = UserLocalStorage();
