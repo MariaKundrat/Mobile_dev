@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lab1/logic/login_logic.dart';
 import 'package:lab1/presentation/widgets/custom_button.dart';
+import 'package:lab1/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,6 +13,7 @@ class LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _rememberMe = true;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -29,20 +30,24 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _loadSavedUsername() async {
-    final savedUsername = await LoginLogic.getSavedUsername();
+    final savedUsername = await AuthService.getUsername();
     if (savedUsername != null) {
       setState(() => _usernameController.text = savedUsername);
     }
   }
 
   Future<void> _checkAutoLogin() async {
-    if (await LoginLogic.isLoggedIn()) {
-      final success = await LoginLogic.loginWithSavedCredentials();
-      if (success && mounted) Navigator.pushReplacementNamed(context, '/home');
+    if (await AuthService.isUserLoggedIn()) {
+      setState(() => _isLoading = true);
+      final success = await AuthService.loginWithSavedCredentials();
+      setState(() => _isLoading = false);
+      if (success && mounted) {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
     }
   }
 
-  void _login() async {
+  Future<void> _login() async {
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
 
@@ -51,36 +56,49 @@ class LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    final savedUsername = await LoginLogic.getSavedUsername();
-    if (savedUsername == null) {
-      await LoginLogic.saveCredentials(username, password);
-      await LoginLogic.setLoggedIn(true);
-      if (mounted) Navigator.pushReplacementNamed(context, '/home');
-    } else {
-      final isValid = await LoginLogic.validateCredentials(username, password);
-      if (isValid) {
-        await LoginLogic.setLoggedIn(true);
-        if (mounted) Navigator.pushReplacementNamed(context, '/home');
+    setState(() => _isLoading = true);
+
+    try {
+      final savedUsername = await AuthService.getUsername();
+
+      if (savedUsername == null) {
+        await AuthService.saveCredentials(username, password);
+        await AuthService.setLoggedIn(_rememberMe);
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/home');
+        }
       } else {
-        _showErrorDialog('Invalid username or password');
+        final isValid =
+            await AuthService.validateCredentials(username, password);
+        if (isValid) {
+          await AuthService.setLoggedIn(_rememberMe);
+          if (mounted) {
+            Navigator.pushReplacementNamed(context, '/home');
+          }
+        } else {
+          _showErrorDialog('Invalid username or password');
+        }
       }
+    } catch (e) {
+      _showErrorDialog('Login error: $e');
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
   void _showErrorDialog(String message) {
     showDialog<void>(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Error'),
-            content: Text(message),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK'),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: const Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
           ),
+        ],
+      ),
     );
   }
 
@@ -137,7 +155,7 @@ class LoginScreenState extends State<LoginScreen> {
                     ),
                     _buildTextField(
                       controller: _usernameController,
-                      labelText: 'Username',
+                      labelText: 'Username/Email',
                       icon: Icons.person,
                     ),
                     _buildTextField(
@@ -150,10 +168,10 @@ class LoginScreenState extends State<LoginScreen> {
                       children: [
                         Checkbox(
                           value: _rememberMe,
-                          onChanged:
-                              (value) =>
-                                  setState(() => _rememberMe = value ?? true),
-                          fillColor: WidgetStateProperty.all(Colors.lightBlue),
+                          onChanged: (value) =>
+                              setState(() => _rememberMe = value ?? true),
+                          fillColor:
+                              WidgetStateProperty.all(Colors.lightBlue),
                         ),
                         const Text(
                           'Remember me',
@@ -161,13 +179,22 @@ class LoginScreenState extends State<LoginScreen> {
                         ),
                       ],
                     ),
-                    CustomButton(text: 'Log in', onPressed: _login),
-                    CustomButton(
-                      text: 'Sign up',
-                      backgroundColor: Colors.blue,
-                      onPressed:
-                          () => Navigator.pushNamed(context, '/register'),
-                    ),
+                    _isLoading
+                        ? const Center(
+                            child:
+                                CircularProgressIndicator(color: Colors.white),)
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              CustomButton(text: 'Log in', onPressed: _login),
+                              CustomButton(
+                                text: 'Sign up',
+                                backgroundColor: Colors.blue,
+                                onPressed: () =>
+                                    Navigator.pushNamed(context, '/register'),
+                              ),
+                            ],
+                          ),
                   ],
                 ),
               ),

@@ -1,30 +1,57 @@
-import 'package:lab1/services/auth_service.dart';
+import 'package:lab1/data/repositories/user_repository_impl.dart';
+import 'package:lab1/domain/entities/user.dart';
+import 'package:lab1/domain/repositories/user_repository.dart';
 
 class LoginLogic {
-  static Future<String?> getSavedUsername() async {
-    return await AuthService.getUsername();
+  final UserRepository _repository = UserRepositoryImpl();
+
+  Future<bool> login(String email, String password) async {
+    final user = await _repository.login(email, password);
+    return user != null;
   }
 
-  static Future<bool> isLoggedIn() async {
-    return await AuthService.isUserLoggedIn();
-  }
-
-  static Future<bool> loginWithSavedCredentials() async {
-    return await AuthService.loginWithSavedCredentials();
-  }
-
-  static Future<void> saveCredentials(String username, String password) async {
-    await AuthService.saveCredentials(username, password);
-  }
-
-  static Future<bool> validateCredentials(
-    String username,
+  Future<String?> validateRegistration(
+    String email,
+    String name,
     String password,
   ) async {
-    return await AuthService.validateCredentials(username, password);
+    if (email.isEmpty || !email.contains('@')) {
+      return Future.value('Incorrect email format');
+    }
+
+    if (name.isEmpty || name.contains(RegExp(r'[0-9]'))) {
+      return Future.value('The name cannot be empty or contain numbers');
+    }
+
+    if (password.length < 6) {
+      return Future.value('Password must contain at least 6 characters');
+    }
+
+    return Future.value(null);
   }
 
-  static Future<void> setLoggedIn(bool value) async {
-    await AuthService.setLoggedIn(value);
+  Future<bool> register(String email, String name, String password) async {
+    final validationError = await validateRegistration(email, name, password);
+    if (validationError != null) {
+      return false;
+    }
+
+    final user = User(email: email, name: name, password: password);
+    await _repository.register(user);
+    return true;
+  }
+
+  Future<User?> getCurrentUser() {
+    return _repository.getCurrentUser();
+  }
+
+  Future<bool> updateUserInfo(User updatedUser) async {
+    await _repository.updateUser(updatedUser);
+    return true;
+  }
+
+  Future<bool> deleteUserAccount() async {
+    await _repository.deleteUser();
+    return true;
   }
 }
