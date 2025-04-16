@@ -60,7 +60,8 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _updateUserData() async {
-    if (_user == null) return;
+    final currentUser = _user;
+    if (currentUser == null) return;
 
     setState(() {
       _isLoading = true;
@@ -70,7 +71,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       final updatedUser = User(
         email: _emailController.text.trim(),
         name: _nameController.text.trim(),
-        password: _user!.password,
+        password: currentUser.password,
       );
 
       await AuthService.updateUser(updatedUser);
@@ -96,7 +97,9 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildUserInfo() {
-    if (_user == null) {
+    final currentUser = _user;
+
+    if (currentUser == null) {
       return const Text(
         'No user data available',
         style: TextStyle(color: Colors.white),
@@ -137,8 +140,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                 onPressed: () {
                   setState(() {
                     _isEditing = false;
-                    _nameController.text = _user!.name;
-                    _emailController.text = _user!.email;
+                    _nameController.text = currentUser.name;
+                    _emailController.text = currentUser.email;
                   });
                 },
                 child: const Text('Cancel'),
@@ -155,7 +158,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       return Column(
         children: [
           Text(
-            _user!.name,
+            currentUser.name,
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -163,7 +166,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           Text(
-            _user!.email,
+            currentUser.email,
             style: const TextStyle(fontSize: 16, color: Colors.white70),
           ),
           const SizedBox(height: 16),
@@ -264,12 +267,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                                   title: 'Settings',
                                   subtitle: 'App settings, notifications',
                                 ),
-                                // const Divider(color: Colors.white54),
-                                // const ProfileInfoItem(
-                                //   icon: Icons.insights,
-                                //   title: 'Statistics',
-                                //   subtitle: 'Spending analysis, crashers',
-                                // ),
                                 const Divider(color: Colors.white54),
                                 const ProfileInfoItem(
                                   icon: Icons.help,
