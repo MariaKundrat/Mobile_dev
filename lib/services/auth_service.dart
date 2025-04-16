@@ -1,22 +1,34 @@
+import 'package:lab1/data/repositories/user_repository_impl.dart';
+import 'package:lab1/domain/entities/user.dart';
+import 'package:lab1/domain/repositories/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  static const String _isLoggedInKey = 'isLoggedIn';
+  static final UserRepository _repository = UserRepositoryImpl();
+  static const String _loggedInKey = 'is_logged_in';
   static const String _usernameKey = 'username';
   static const String _passwordKey = 'password';
 
+  static Future<String?> getUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_usernameKey);
+  }
+
   static Future<bool> isUserLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_isLoggedInKey) ?? false;
+    return prefs.getBool(_loggedInKey) ?? false;
   }
 
-  static Future<bool> isLoggedIn() async {
-    return isUserLoggedIn();
-  }
-
-  static Future<void> setLoggedIn(bool value) async {
+  static Future<bool> loginWithSavedCredentials() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_isLoggedInKey, value);
+    final username = prefs.getString(_usernameKey);
+    final password = prefs.getString(_passwordKey);
+
+    if (username != null && password != null) {
+      final user = await _repository.login(username, password);
+      return user != null;
+    }
+    return false;
   }
 
   static Future<void> saveCredentials(String username, String password) async {
@@ -25,49 +37,33 @@ class AuthService {
     await prefs.setString(_passwordKey, password);
   }
 
-  static Future<String?> getSavedUsername() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_usernameKey);
-  }
-
-  static Future<String?> getSavedPassword() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_passwordKey);
-  }
-
   static Future<bool> validateCredentials(
     String username,
     String password,
   ) async {
-    final savedUsername = await getSavedUsername();
-    final savedPassword = await getSavedPassword();
-
-    if (savedUsername == null || savedPassword == null) {
-      return false;
-    }
-
-    return username == savedUsername && password == savedPassword;
+    final user = await _repository.login(username, password);
+    return user != null;
   }
 
-  static Future<bool> loginWithSavedCredentials() async {
-    final username = await getSavedUsername();
-    final password = await getSavedPassword();
-
-    if (username != null && password != null) {
-      await setLoggedIn(true);
-      return true;
-    }
-
-    return false;
-  }
-
-  static Future<void> logout({bool clearCredentials = false}) async {
+  static Future<void> setLoggedIn(bool value) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_isLoggedInKey, false);
+    await prefs.setBool(_loggedInKey, value);
+  }
 
-    if (clearCredentials) {
-      await prefs.remove(_usernameKey);
-      await prefs.remove(_passwordKey);
-    }
+  static Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_loggedInKey, false);
+  }
+
+  static Future<User?> getCurrentUser() async {
+    return await _repository.getCurrentUser();
+  }
+
+  static Future<void> updateUser(User user) async {
+    await _repository.updateUser(user);
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_usernameKey, user.email);
+    await prefs.setString(_passwordKey, user.password);
   }
 }

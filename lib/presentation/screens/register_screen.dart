@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lab1/widgets/custom_button.dart';
-import 'package:lab1/widgets/custom_text_field.dart';
+import 'package:lab1/domain/entities/user.dart';
+import 'package:lab1/presentation/widgets/custom_button.dart';
+import 'package:lab1/presentation/widgets/custom_text_field.dart';
+import 'package:lab1/services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -19,11 +21,69 @@ class _RegisterScreenState extends State<RegisterScreen> {
       TextEditingController();
 
   bool _isFormValid = false;
+  bool _isLoading = false;
 
   void _validateForm() {
     setState(() {
       _isFormValid = _formKey.currentState?.validate() ?? false;
     });
+  }
+
+  Future<void> _register() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final name = _fullNameController.text.trim();
+      final email = _emailController.text.trim();
+      final password = _passwordController.text;
+
+      final validationError = await AuthService.validateCredentials(
+        _emailController.text,
+        _passwordController.text,
+      );
+
+      if (validationError) {
+        _showErrorDialog(validationError as String);
+        return;
+      }
+
+      await AuthService.saveCredentials(email, password);
+
+      final user = User(email: email, name: name, password: password);
+      await AuthService.updateUser(user);
+
+      await AuthService.setLoggedIn(true);
+
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } catch (e) {
+      _showErrorDialog('Error during registration: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -51,7 +111,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   const SizedBox(height: 30),
-
                   CustomTextField(
                     labelText: 'Full Name',
                     prefixIcon: Icons.person,
@@ -63,11 +122,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Full Name is required';
                       }
+                      if (value.contains(RegExp(r'[0-9]'))) {
+                        return 'Name cannot contain numbers';
+                      }
                       return null;
                     },
                     onChanged: (_) => _validateForm(),
                   ),
-
                   CustomTextField(
                     labelText: 'Email',
                     prefixIcon: Icons.email,
@@ -88,7 +149,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                     onChanged: (_) => _validateForm(),
                   ),
-
                   CustomTextField(
                     labelText: 'Password',
                     prefixIcon: Icons.lock,
@@ -102,13 +162,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         return 'Password is required';
                       }
                       if (value.length < 6) {
-                        return 'Password must be at least 7 characters';
+                        return 'Password must be at least 6 characters';
                       }
                       return null;
                     },
                     onChanged: (_) => _validateForm(),
                   ),
-
                   CustomTextField(
                     labelText: 'Confirm Password',
                     prefixIcon: Icons.lock,
@@ -128,24 +187,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                     onChanged: (_) => _validateForm(),
                   ),
-
                   const SizedBox(height: 30),
-
-                  CustomButton(
-                    text: 'Register',
-                    onPressed:
-                        _isFormValid
-                            ? () {
-                              if (_formKey.currentState!.validate()) {
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  '/home',
-                                );
-                              }
-                            }
-                            : () {},
-                  ),
-
+                  if (_isLoading)
+                    const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    )
+                  else
+                    CustomButton(
+                      text: 'Register',
+                      onPressed: _isFormValid && !_isLoading ? _register : null,
+                    ),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

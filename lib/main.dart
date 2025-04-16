@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
-import 'package:lab1/screens/home_screen.dart';
-import 'package:lab1/screens/login_screen.dart';
-import 'package:lab1/screens/profile_screen.dart';
-import 'package:lab1/screens/register_screen.dart';
-import 'package:lab1/screens/settings_screen.dart';
+import 'package:lab1/presentation/screens/home_screen.dart';
+import 'package:lab1/presentation/screens/login_screen.dart';
+import 'package:lab1/presentation/screens/profile_screen.dart';
+import 'package:lab1/presentation/screens/register_screen.dart';
+import 'package:lab1/presentation/screens/settings_screen.dart';
 import 'package:lab1/services/auth_service.dart';
 
 void main() async {

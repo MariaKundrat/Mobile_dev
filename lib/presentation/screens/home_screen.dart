@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lab1/widgets/custom_button.dart';
-import 'package:lab1/widgets/temperature_card.dart';
+import 'package:lab1/presentation/widgets/custom_button.dart';
+import 'package:lab1/presentation/widgets/temperature_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,6 +14,7 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   double _currentTemperature = 36.6;
   bool _isCelsius = true;
+  double _brightness = 0.5;
 
   void _scanTemperature() {
     setState(() {
@@ -82,6 +83,41 @@ class HomeScreenState extends State<HomeScreen> {
                       backgroundColor: Colors.pink,
                       onPressed: _toggleTemperatureUnit,
                     ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Icon(
+                Icons.favorite,
+                size: 120,
+                color: Colors.red.withAlpha((_brightness * 255).toInt()),
+              ),
+              const SizedBox(height: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Center(
+                    child: Text(
+                      'Brightness',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueAccent,
+                      ),
+                    ),
+                  ),
+                  Slider(
+                    value: _brightness,
+                    min: 0.2,
+                    divisions: 100,
+                    label: (_brightness * 100).toInt().toString(),
+                    onChanged: (value) {
+                      setState(() {
+                        _brightness = value;
+                      });
+                    },
                   ),
                 ],
               ),
