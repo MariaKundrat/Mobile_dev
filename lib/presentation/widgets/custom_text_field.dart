@@ -48,11 +48,15 @@ class CustomTextField extends StatelessWidget {
             borderSide: const BorderSide(color: Colors.blue, width: 2),
           ),
           labelText: labelText,
+          errorStyle: const TextStyle(
+            color: Colors.orange,
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
           labelStyle: labelStyle ?? const TextStyle(color: Colors.black),
-          prefixIcon:
-              prefixIcon != null
-                  ? Icon(prefixIcon, color: iconColor ?? Colors.black)
-                  : null,
+          prefixIcon: prefixIcon != null
+              ? Icon(prefixIcon, color: iconColor ?? Colors.black)
+              : null,
           fillColor: const Color.fromRGBO(255, 255, 255, 0.2),
           filled: true,
         ),
