@@ -5,9 +5,10 @@ class ConnectionService {
 
   Future<bool> isConnected() async {
     final result = await _connectivity.checkConnectivity();
+    // ignore: unrelated_type_equality_checks
     return result != ConnectivityResult.none;
   }
 
-  Stream<ConnectivityResult> get onConnectionChange =>
+  Stream<List<ConnectivityResult>> get onConnectionChange =>
       _connectivity.onConnectivityChanged;
 }

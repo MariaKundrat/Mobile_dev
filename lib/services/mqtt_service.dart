@@ -7,6 +7,7 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 class MqttService {
   final _client = MqttServerClient('broker.hivemq.com', '');
 
+  // ignore: inference_failure_on_function_return_type
   Future<void> connect(Function(String) onMessage) async {
     _client.logging(on: false);
     _client.keepAlivePeriod = 20;

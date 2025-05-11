@@ -279,12 +279,42 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 CustomButton(
                                   text: 'Log Out',
                                   backgroundColor: Colors.lightGreen,
-                                  onPressed: () {
-                                    AuthService.logout();
-                                    Navigator.pushReplacementNamed(
-                                      context,
-                                      '/login',
+                                  onPressed: () async {
+                                    final shouldLogout = await showDialog<bool>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('Confirm Logout'),
+                                          content: const Text(
+                                            'Are you sure you want to log '
+                                            'out?',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(false);
+                                              },
+                                              child: const Text('Cancel'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop(true);
+                                              },
+                                              child: const Text('Logout'),
+                                            ),
+                                          ],
+                                        );
+                                      },
                                     );
+
+                                    if (shouldLogout == true) {
+                                      await AuthService.logout();
+                                      if (!mounted) return;
+                                      Navigator.pushReplacementNamed(
+                                          // ignore: use_build_context_synchronously
+                                          context, '/login',);
+                                    }
                                   },
                                 ),
                             ],

@@ -44,8 +44,8 @@ class HomeScreenState extends State<HomeScreen> {
     _mqttService = MqttService();
     final connection = ConnectionService();
 
-    connection.onConnectionChange.listen((status) {
-      if (status == ConnectivityResult.none) {
+    connection.onConnectionChange.listen((statusList) {
+      if (statusList.contains(ConnectivityResult.none) && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Lost Internet Connection')),
         );
@@ -109,7 +109,8 @@ class HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Температура надходить з MQTT'),),
+                            content: Text('Температура надходить з MQTT'),
+                          ),
                         );
                       },
                     ),

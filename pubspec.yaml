@@ -39,7 +39,7 @@ dependencies:
 
   mqtt_client: ^10.0.0
 
-  connectivity_plus: ^5.0.2
+  connectivity_plus: ^6.1.0
 
   internet_connection_checker: ^1.0.0+1
 
