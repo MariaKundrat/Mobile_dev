@@ -1,6 +1,9 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:lab1/presentation/widgets/custom_button.dart';
 import 'package:lab1/presentation/widgets/temperature_card.dart';
+import 'package:lab1/services/connection_service.dart';
+import 'package:lab1/services/mqtt_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,11 +19,11 @@ class HomeScreenState extends State<HomeScreen> {
   bool _isCelsius = true;
   double _brightness = 0.5;
 
-  void _scanTemperature() {
-    setState(() {
-      _currentTemperature = 36.0 + (DateTime.now().millisecond % 5) / 1.0;
-    });
-  }
+  // void _scanTemperature() {
+  //   setState(() {
+  //     _currentTemperature = 36.0 + (DateTime.now().millisecond % 5) / 1.0;
+  //   });
+  // }
 
   void _toggleTemperatureUnit() {
     setState(() {
@@ -31,6 +34,35 @@ class HomeScreenState extends State<HomeScreen> {
       }
       _isCelsius = !_isCelsius;
     });
+  }
+
+  late final MqttService _mqttService;
+
+  @override
+  void initState() {
+    super.initState();
+    _mqttService = MqttService();
+    final connection = ConnectionService();
+
+    connection.onConnectionChange.listen((status) {
+      if (status == ConnectivityResult.none) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Lost Internet Connection')),
+        );
+      }
+    });
+
+    _mqttService.connect((data) {
+      setState(() {
+        _currentTemperature = double.tryParse(data) ?? _currentTemperature;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _mqttService.disconnect();
+    super.dispose();
   }
 
   @override
@@ -73,7 +105,13 @@ class HomeScreenState extends State<HomeScreen> {
                     child: CustomButton(
                       text: 'Scan Temp',
                       backgroundColor: const Color(0xFF2665B6),
-                      onPressed: _scanTemperature,
+                      // onPressed: _scanTemperature,
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Температура надходить з MQTT'),),
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(width: 16),
