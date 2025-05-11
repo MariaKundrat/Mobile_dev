@@ -1,24 +1,56 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lab1/presentation/widgets/custom_button.dart';
 import 'package:lab1/presentation/widgets/temperature_card.dart';
+import 'package:lab1/services/connection_service.dart';
+import 'package:lab1/services/mqtt_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  HomeScreenState createState() {
-    return HomeScreenState();
-  }
+  HomeScreenState createState() => HomeScreenState();
 }
 
 class HomeScreenState extends State<HomeScreen> {
   double _currentTemperature = 36.6;
   bool _isCelsius = true;
   double _brightness = 0.5;
+  late MqttService _mqttService;
+  bool _isConnected = false;
+  late final ConnectivityService _connectivityService;
+  late final StreamSubscription<ConnectionStatus> _subscription;
 
-  void _scanTemperature() {
-    setState(() {
-      _currentTemperature = 36.0 + (DateTime.now().millisecond % 5) / 1.0;
+  @override
+  void initState() {
+    super.initState();
+    _mqttService = MqttService();
+
+    _connectivityService = ConnectivityService();
+    _subscription = _connectivityService.statusStream.listen((status) {
+      if (status == ConnectionStatus.offline) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('⚠️ No Internet connection')),
+        );
+      } else {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('✅ Connected to Internet')),
+        );
+      }
+    });
+
+    _mqttService.onDataReceived = (String data) {
+      setState(() {
+        _currentTemperature = double.tryParse(data) ?? _currentTemperature;
+      });
+    };
+
+    _mqttService.connect().then((_) {
+      setState(() {
+        _isConnected = true;
+      });
     });
   }
 
@@ -31,6 +63,25 @@ class HomeScreenState extends State<HomeScreen> {
       }
       _isCelsius = !_isCelsius;
     });
+  }
+
+  void _scanTemperature() {
+    if (_isConnected) {
+      _mqttService.requestTemperature();
+    } else {
+      debugPrint('⚠️ MQTT not connected yet');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Still connecting to MQTT broker...')),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    _connectivityService.dispose();
+    _mqttService.disconnect();
+    super.dispose();
   }
 
   @override
@@ -86,9 +137,7 @@ class HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 30),
               Icon(
                 Icons.favorite,
                 size: 120,

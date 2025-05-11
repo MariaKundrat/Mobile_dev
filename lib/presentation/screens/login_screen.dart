@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lab1/logic/login_logic.dart';
 import 'package:lab1/presentation/widgets/custom_button.dart';
 import 'package:lab1/services/auth_service.dart';
+import 'package:lab1/services/connection_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,6 +16,7 @@ class LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _rememberMe = true;
   bool _isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   @override
   void initState() {
@@ -42,6 +44,7 @@ class LoginScreenState extends State<LoginScreen> {
       setState(() => _isLoading = true);
       final success = await AuthService.loginWithSavedCredentials();
       setState(() => _isLoading = false);
+
       if (success && mounted) {
         Navigator.pushReplacementNamed(context, '/home');
       }
@@ -49,6 +52,11 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
+    final status = await _connectivityService.getCurrentStatus();
+    if (status == ConnectionStatus.offline) {
+      _showErrorDialog('No Internet connection. Please connect and try again.');
+      return;
+    }
     final email = _usernameController.text.trim();
     final password = _passwordController.text.trim();
     final logic = LoginLogic();
@@ -81,6 +89,22 @@ class LoginScreenState extends State<LoginScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showWarningDialog(String message) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Warning'),
         content: Text(message),
         actions: [
           TextButton(
