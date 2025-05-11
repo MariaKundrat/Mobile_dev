@@ -1,6 +1,6 @@
 #include <EEPROM.h>
 
-const int EEPROM_SIZE = 256;
+const int EEPROM_SIZE = 512;
 bool messageReceived = false;
 
 void setup() {
