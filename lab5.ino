@@ -8,7 +8,7 @@ void setup() {
   EEPROM.begin(EEPROM_SIZE);
 
   delay(1000);
-  Serial.println("ESP32 стартує...");
+  Serial.println("ESP32 starts...");
 
   String storedMessage = readFromEEPROM();
   if (storedMessage.length() > 0) {
@@ -21,12 +21,15 @@ void loop() {
     String message = Serial.readStringUntil('\n');
     message.trim();
 
-    if (message.length() > 0 && !messageReceived) {
+    if (message == "GET") {
+      String stored = readFromEEPROM();
+      Serial.println(stored);
+    } else if (message.length() > 0 && !messageReceived) {
       writeToEEPROM(message);
       messageReceived = true;
-      Serial.println("Дані збережено!");
+      Serial.println("Data saved!");
     } else {
-      Serial.println("Отримано, але пусто або вже збережено");
+      Serial.println("Get, but empty");
     }
   }
 }
