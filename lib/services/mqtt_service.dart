@@ -1,55 +1,62 @@
+import 'package:flutter/foundation.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 class MqttService {
   late MqttServerClient _client;
-  Function(String)? onDataReceived;
+  void Function(String)? onDataReceived;
 
   Future<void> connect() async {
     _client = MqttServerClient('test.mosquitto.org', 'flutter_client');
-    _client.port = 1883;
-    _client.keepAlivePeriod = 20;
-    _client.onDisconnected = onDisconnected;
-    _client.onConnected = onConnected;
-    _client.logging(on: false);
-
-    _client.connectionMessage = MqttConnectMessage()
-        .withClientIdentifier('flutter_client')
-        .startClean()
-        .withWillQos(MqttQos.atLeastOnce);
+    _client
+      ..port = 1883
+      ..keepAlivePeriod = 20
+      ..logging(on: false)
+      ..onConnected = _handleConnected
+      ..onDisconnected = _handleDisconnected
+      ..connectionMessage = MqttConnectMessage()
+          .withClientIdentifier('flutter_client')
+          .startClean()
+          .withWillQos(MqttQos.atLeastOnce);
 
     try {
-      print('🔌 Connecting to broker...');
       await _client.connect();
-      if (_client.connectionStatus!.state == MqttConnectionState.connected) {
-        print('✅ Connected to MQTT broker');
-        _client.subscribe('sensor/temperature', MqttQos.atMostOnce);
+      if (_client.connectionStatus?.state == MqttConnectionState.connected) {
+        const dataTopic = 'sensor/temperature';
+        _client.subscribe(dataTopic, MqttQos.atMostOnce);
+
+        _client.updates?.listen((messages) {
+          final recMess = messages[0].payload as MqttPublishMessage;
+          final payload = MqttPublishPayload.bytesToStringAsString(
+            recMess.payload.message,
+          );
+          onDataReceived?.call(payload);
+        });
       } else {
-        print('❌ Connection failed - status: ${_client.connectionStatus}');
         _client.disconnect();
       }
-    } catch (e) {
-      print('❌ Exception: $e');
+    } catch (_) {
       _client.disconnect();
     }
   }
 
   void requestTemperature() {
-    const pubTopic = 'sensor/temperature/request';
-    final builder = MqttClientPayloadBuilder();
-    builder.addString('get_temperature');
-    _client.publishMessage(pubTopic, MqttQos.atLeastOnce, builder.payload!);
+    const reqTopic = 'sensor/temperature/request';
+    final builder = MqttClientPayloadBuilder()..addString('get_temperature');
+    _client.publishMessage(reqTopic, MqttQos.atLeastOnce, builder.payload!);
   }
 
-  void disconnect() {
-    _client.disconnect();
+  void disconnect() => _client.disconnect();
+
+  void _handleConnected() {
+    if (kDebugMode) {
+      debugPrint('MQTT connected');
+    }
   }
 
-  void onConnected() {
-    print('✅ Connected to MQTT broker');
-  }
-
-  void onDisconnected() {
-    print('❗Disconnected from MQTT broker');
+  void _handleDisconnected() {
+    if (kDebugMode) {
+      debugPrint('MQTT disconnected');
+    }
   }
 }

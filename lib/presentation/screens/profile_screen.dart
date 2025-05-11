@@ -312,8 +312,9 @@ class ProfileScreenState extends State<ProfileScreen> {
                                       await AuthService.logout();
                                       if (!mounted) return;
                                       Navigator.pushReplacementNamed(
-                                          // ignore: use_build_context_synchronously
-                                          context, '/login',);
+                                        // ignore: use_build_context_synchronously
+                                        context, '/login',
+                                      );
                                     }
                                   },
                                 ),
