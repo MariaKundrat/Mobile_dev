@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:lab1/presentation/screens/message_view_screen.dart';
+import 'package:lab1/presentation/screens/qr_scanner_screen.dart';
 import 'package:lab1/presentation/widgets/custom_button.dart';
 import 'package:lab1/presentation/widgets/temperature_card.dart';
 import 'package:lab1/services/connection_service.dart';
@@ -133,6 +135,40 @@ class HomeScreenState extends State<HomeScreen> {
                       text: _isCelsius ? 'To Fahren' : 'To Celsius',
                       backgroundColor: Colors.pink,
                       onPressed: _toggleTemperatureUnit,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 30),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomButton(
+                      text: 'Open Camera',
+                      backgroundColor: Colors.green,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<QRScannerScreen>(
+                            builder: (context) => const QRScannerScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: CustomButton(
+                      text: 'View Last Message',
+                      backgroundColor: Colors.orange,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<MessageScreen>(
+                            builder: (context) => const MessageScreen(),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
