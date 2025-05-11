@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lab1/presentation/widgets/custom_button.dart';
 import 'package:lab1/presentation/widgets/temperature_card.dart';
+import 'package:lab1/services/connection_service.dart';
 import 'package:lab1/services/mqtt_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,6 +18,41 @@ class HomeScreenState extends State<HomeScreen> {
   double _brightness = 0.5;
   late MqttService _mqttService;
   bool _isConnected = false;
+  late final ConnectivityService _connectivityService;
+  late final StreamSubscription<ConnectionStatus> _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _mqttService = MqttService();
+
+    _connectivityService = ConnectivityService();
+    _subscription = _connectivityService.statusStream.listen((status) {
+      if (status == ConnectionStatus.offline) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('⚠️ No Internet connection')),
+        );
+      } else {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('✅ Connected to Internet')),
+        );
+      }
+    });
+
+    _mqttService.onDataReceived = (String data) {
+      setState(() {
+        _currentTemperature = double.tryParse(data) ?? _currentTemperature;
+      });
+    };
+
+    _mqttService.connect().then((_) {
+      setState(() {
+        _isConnected = true;
+      });
+    });
+  }
 
   void _toggleTemperatureUnit() {
     setState(() {
@@ -40,25 +77,9 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _mqttService = MqttService();
-
-    _mqttService.onDataReceived = (String data) {
-      setState(() {
-        _currentTemperature = double.tryParse(data) ?? _currentTemperature;
-      });
-    };
-
-    _mqttService.connect().then((_) {
-      setState(() {
-        _isConnected = true;
-      });
-    });
-  }
-
-  @override
   void dispose() {
+    _subscription.cancel();
+    _connectivityService.dispose();
     _mqttService.disconnect();
     super.dispose();
   }
