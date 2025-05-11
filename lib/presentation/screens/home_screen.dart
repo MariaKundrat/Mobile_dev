@@ -1,8 +1,6 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:lab1/presentation/widgets/custom_button.dart';
 import 'package:lab1/presentation/widgets/temperature_card.dart';
-import 'package:lab1/services/connection_service.dart';
 import 'package:lab1/services/mqtt_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,6 +16,7 @@ class HomeScreenState extends State<HomeScreen> {
   double _currentTemperature = 36.6;
   bool _isCelsius = true;
   double _brightness = 0.5;
+  late MqttService _mqttService;
 
   // void _scanTemperature() {
   //   setState(() {
@@ -36,27 +35,18 @@ class HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  late final MqttService _mqttService;
-
   @override
   void initState() {
     super.initState();
     _mqttService = MqttService();
-    final connection = ConnectionService();
 
-    connection.onConnectionChange.listen((statusList) {
-      if (statusList.contains(ConnectivityResult.none) && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Lost Internet Connection')),
-        );
-      }
-    });
-
-    _mqttService.connect((data) {
+    _mqttService.onDataReceived = (String data) {
       setState(() {
         _currentTemperature = double.tryParse(data) ?? _currentTemperature;
       });
-    });
+    };
+
+    _mqttService.connect();
   }
 
   @override
