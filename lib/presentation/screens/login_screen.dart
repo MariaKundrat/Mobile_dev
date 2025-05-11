@@ -17,16 +17,10 @@ class LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = true;
   bool _isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
-  ConnectionStatus _connectionStatus = ConnectionStatus.online;
 
   @override
   void initState() {
     super.initState();
-    _connectivityService.statusStream.listen((status) {
-      setState(() {
-        _connectionStatus = status;
-      });
-    });
     _checkAutoLogin();
     _loadSavedUsername();
   }
@@ -47,19 +41,11 @@ class LoginScreenState extends State<LoginScreen> {
 
   Future<void> _checkAutoLogin() async {
     if (await AuthService.isUserLoggedIn()) {
-      final status = await _connectivityService.getCurrentStatus();
-      _connectionStatus = status;
-
       setState(() => _isLoading = true);
       final success = await AuthService.loginWithSavedCredentials();
       setState(() => _isLoading = false);
 
       if (success && mounted) {
-        if (_connectionStatus == ConnectionStatus.offline) {
-          _showWarningDialog(
-            'Logged in offline. Some features may be limited.',
-          );
-        }
         Navigator.pushReplacementNamed(context, '/home');
       }
     }
