@@ -49,6 +49,8 @@ class _MessageScreenState extends State<MessageScreen> {
       UsbPort.PARITY_NONE,
     );
 
+    await _port!.write(Uint8List.fromList("GET\n".codeUnits));
+
     _transaction = Transaction.stringTerminated(
       _port!.inputStream!,
       Uint8List.fromList([13, 10]),
