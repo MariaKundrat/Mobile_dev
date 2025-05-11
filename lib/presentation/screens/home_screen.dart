@@ -7,9 +7,7 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  HomeScreenState createState() {
-    return HomeScreenState();
-  }
+  HomeScreenState createState() => HomeScreenState();
 }
 
 class HomeScreenState extends State<HomeScreen> {
@@ -17,12 +15,7 @@ class HomeScreenState extends State<HomeScreen> {
   bool _isCelsius = true;
   double _brightness = 0.5;
   late MqttService _mqttService;
-
-  // void _scanTemperature() {
-  //   setState(() {
-  //     _currentTemperature = 36.0 + (DateTime.now().millisecond % 5) / 1.0;
-  //   });
-  // }
+  bool _isConnected = false;
 
   void _toggleTemperatureUnit() {
     setState(() {
@@ -33,6 +26,17 @@ class HomeScreenState extends State<HomeScreen> {
       }
       _isCelsius = !_isCelsius;
     });
+  }
+
+  void _scanTemperature() {
+    if (_isConnected) {
+      _mqttService.requestTemperature();
+    } else {
+      debugPrint('⚠️ MQTT not connected yet');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Still connecting to MQTT broker...')),
+      );
+    }
   }
 
   @override
@@ -46,7 +50,11 @@ class HomeScreenState extends State<HomeScreen> {
       });
     };
 
-    _mqttService.connect();
+    _mqttService.connect().then((_) {
+      setState(() {
+        _isConnected = true;
+      });
+    });
   }
 
   @override
@@ -95,14 +103,7 @@ class HomeScreenState extends State<HomeScreen> {
                     child: CustomButton(
                       text: 'Scan Temp',
                       backgroundColor: const Color(0xFF2665B6),
-                      // onPressed: _scanTemperature,
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Температура надходить з MQTT'),
-                          ),
-                        );
-                      },
+                      onPressed: _scanTemperature,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -115,9 +116,7 @@ class HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 30),
               Icon(
                 Icons.favorite,
                 size: 120,

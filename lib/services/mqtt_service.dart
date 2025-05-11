@@ -1,48 +1,55 @@
-import 'dart:async';
-import 'package:flutter/foundation.dart';
-import 'package:mqtt_client/mqtt_client.dart' as mqtt;
+import 'package:mqtt_client/mqtt_client.dart';
+import 'package:mqtt_client/mqtt_server_client.dart';
 
 class MqttService {
-  late mqtt.MqttClient _client;
-  void Function(String)? onDataReceived;
-
-  MqttService();
+  late MqttServerClient _client;
+  Function(String)? onDataReceived;
 
   Future<void> connect() async {
-    _client = mqtt.MqttClient('broker.hivemq.com', '');
+    _client = MqttServerClient('test.mosquitto.org', 'flutter_client');
     _client.port = 1883;
-    _client.keepAlivePeriod = 60;
+    _client.keepAlivePeriod = 20;
     _client.onDisconnected = onDisconnected;
+    _client.onConnected = onConnected;
+    _client.logging(on: false);
+
+    _client.connectionMessage = MqttConnectMessage()
+        .withClientIdentifier('flutter_client')
+        .startClean()
+        .withWillQos(MqttQos.atLeastOnce);
 
     try {
+      print('🔌 Connecting to broker...');
       await _client.connect();
-      if (_client.connectionStatus!.state ==
-          mqtt.MqttConnectionState.connected) {
-        subscribeToTopic();
+      if (_client.connectionStatus!.state == MqttConnectionState.connected) {
+        print('✅ Connected to MQTT broker');
+        _client.subscribe('sensor/temperature', MqttQos.atMostOnce);
+      } else {
+        print('❌ Connection failed - status: ${_client.connectionStatus}');
+        _client.disconnect();
       }
     } catch (e) {
-      debugPrint('Error connecting to MQTT broker: $e');
+      print('❌ Exception: $e');
+      _client.disconnect();
     }
   }
 
-  void subscribeToTopic() {
-    const topic = 'sensor/temperature';
-    _client.subscribe(topic, mqtt.MqttQos.atMostOnce);
-    _client.updates!
-        .listen((List<mqtt.MqttReceivedMessage<mqtt.MqttMessage>> event) {
-      final payload = event[0].payload as mqtt.MqttPublishMessage;
-      final message = mqtt.MqttPublishPayload.bytesToStringAsString(
-        payload.payload.message,
-      );
-      onDataReceived?.call(message);
-    });
-  }
-
-  void onDisconnected() {
-    debugPrint('Disconnected from MQTT broker');
+  void requestTemperature() {
+    const pubTopic = 'sensor/temperature/request';
+    final builder = MqttClientPayloadBuilder();
+    builder.addString('get_temperature');
+    _client.publishMessage(pubTopic, MqttQos.atLeastOnce, builder.payload!);
   }
 
   void disconnect() {
     _client.disconnect();
+  }
+
+  void onConnected() {
+    print('✅ Connected to MQTT broker');
+  }
+
+  void onDisconnected() {
+    print('❗Disconnected from MQTT broker');
   }
 }
