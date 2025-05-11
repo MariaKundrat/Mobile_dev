@@ -23,7 +23,11 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       await _port?.setDTR(true);
       await _port?.setRTS(true);
       await _port?.setPortParameters(
-          9600, UsbPort.DATABITS_8, UsbPort.STOPBITS_1, UsbPort.PARITY_NONE);
+        9600,
+        UsbPort.DATABITS_8,
+        UsbPort.STOPBITS_1,
+        UsbPort.PARITY_NONE,
+      );
     }
   }
 
@@ -72,12 +76,12 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
           ),
           if (_isSending)
             const Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16),
               child: CircularProgressIndicator(),
             )
           else if (_scanned)
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
                   const Text('QR-код відскановано та надіслано!'),

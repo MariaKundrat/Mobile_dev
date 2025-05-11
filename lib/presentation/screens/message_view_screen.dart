@@ -31,6 +31,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
     _port = await devices[0].create();
     final bool openResult = await _port!.open();
+
     if (!openResult) {
       setState(() {
         _receivedData = 'Не вдалося відкрити порт';
@@ -42,10 +43,17 @@ class _MessageScreenState extends State<MessageScreen> {
     await _port!.setDTR(true);
     await _port!.setRTS(true);
     await _port!.setPortParameters(
-        9600, UsbPort.DATABITS_8, UsbPort.STOPBITS_1, UsbPort.PARITY_NONE);
+      9600,
+      UsbPort.DATABITS_8,
+      UsbPort.STOPBITS_1,
+      UsbPort.PARITY_NONE,
+    );
 
     _transaction = Transaction.stringTerminated(
-        _port!.inputStream!, Uint8List.fromList([10]));
+      _port!.inputStream!,
+      Uint8List.fromList([13, 10]),
+    );
+
     _transaction!.stream.listen((data) {
       setState(() {
         _receivedData = data.trim();
