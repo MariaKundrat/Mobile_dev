@@ -14,7 +14,7 @@ class MessageScreen extends StatefulWidget {
 class _MessageScreenState extends State<MessageScreen> {
   UsbPort? _port;
   Transaction<String>? _transaction;
-  String _receivedData = 'Очікування даних...';
+  String _receivedData = 'Waiting for data...';
   bool _isReading = false;
 
   Future<void> _connectAndRead() async {
@@ -23,7 +23,7 @@ class _MessageScreenState extends State<MessageScreen> {
     final devices = await UsbSerial.listDevices();
     if (devices.isEmpty) {
       setState(() {
-        _receivedData = 'Не знайдено жодного USB пристрою';
+        _receivedData = 'No USB devices found';
         _isReading = false;
       });
       return;
@@ -34,7 +34,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
     if (!openResult) {
       setState(() {
-        _receivedData = 'Не вдалося відкрити порт';
+        _receivedData = 'Failed to open port';
         _isReading = false;
       });
       return;
@@ -81,7 +81,7 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Останнє повідомлення з ESP32')),
+      appBar: AppBar(title: const Text('Last message from ESP32')),
       body: Center(
         child: _isReading
             ? const CircularProgressIndicator()

@@ -30,13 +30,13 @@ class HomeScreenState extends State<HomeScreen> {
 
     _connectivityService = ConnectivityService();
     _subscription = _connectivityService.statusStream.listen((status) {
+      if (!mounted) return;
+
       if (status == ConnectionStatus.offline) {
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('⚠️ No Internet connection')),
         );
       } else {
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('✅ Connected to Internet')),
         );
@@ -44,12 +44,14 @@ class HomeScreenState extends State<HomeScreen> {
     });
 
     _mqttService.onDataReceived = (String data) {
+      if (!mounted) return;
       setState(() {
         _currentTemperature = double.tryParse(data) ?? _currentTemperature;
       });
     };
 
     _mqttService.connect().then((_) {
+      if (!mounted) return;
       setState(() {
         _isConnected = true;
       });

@@ -55,7 +55,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Сканувати QR-код')),
+      appBar: AppBar(title: const Text('Scan QR-code')),
       body: Column(
         children: [
           Expanded(
@@ -84,14 +84,14 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  const Text('QR-код відскановано та надіслано!'),
+                  const Text('QR-code scanned and sent!'),
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
                         _scanned = false;
                       });
                     },
-                    child: const Text('Сканувати ще'),
+                    child: const Text('Scan more'),
                   ),
                 ],
               ),
