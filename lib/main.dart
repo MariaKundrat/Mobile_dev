@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lab1/presentation/screens/home_screen.dart';
 import 'package:lab1/presentation/screens/login_screen.dart';
+import 'package:lab1/presentation/screens/message_view_screen.dart';
 import 'package:lab1/presentation/screens/profile_screen.dart';
+import 'package:lab1/presentation/screens/qr_scanner_screen.dart';
 import 'package:lab1/presentation/screens/register_screen.dart';
 import 'package:lab1/presentation/screens/settings_screen.dart';
 import 'package:lab1/services/auth_service.dart';
@@ -48,6 +50,8 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => const ProfileScreen(),
         '/home': (context) => const HomeScreen(),
         '/settings': (context) => const SettingsScreen(),
+        '/scan': (context) => const QRScannerScreen(),
+        '/message': (context) => const MessageScreen(),
       },
     );
   }
