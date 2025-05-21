@@ -24,9 +24,8 @@ void loop() {
     if (message == "GET") {
       String stored = readFromEEPROM();
       Serial.println(stored);
-    } else if (message.length() > 0 && !messageReceived) {
+    } else if (message.length() > 0) {
       writeToEEPROM(message);
-      messageReceived = true;
       Serial.println("Data saved!");
     } else {
       Serial.println("Get, but empty");
