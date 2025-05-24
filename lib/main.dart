@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lab1/cubit/auth_cubit.dart';
 import 'package:lab1/presentation/screens/home_screen.dart';
 import 'package:lab1/presentation/screens/login_screen.dart';
 import 'package:lab1/presentation/screens/message_view_screen.dart';
@@ -6,52 +8,64 @@ import 'package:lab1/presentation/screens/profile_screen.dart';
 import 'package:lab1/presentation/screens/qr_scanner_screen.dart';
 import 'package:lab1/presentation/screens/register_screen.dart';
 import 'package:lab1/presentation/screens/settings_screen.dart';
-import 'package:lab1/services/auth_service.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
-  final bool isLoggedIn = await AuthService.isUserLoggedIn();
-
-  bool autoLoginSuccessful = false;
-  if (isLoggedIn) {
-    autoLoginSuccessful = await AuthService.loginWithSavedCredentials();
-  }
-
-  runApp(MyApp(isLoggedIn: isLoggedIn && autoLoginSuccessful));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final bool isLoggedIn;
-  const MyApp({required this.isLoggedIn, super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: const Color(0xFF2665B6),
-        scaffoldBackgroundColor: const Color(0xFFF5F5F5),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF2665B6),
-          primary: const Color(0xFF2665B6),
-          secondary: const Color(0xFFC1E1FF),
+    return BlocProvider(
+      create: (_) => AuthCubit(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: const Color(0xFF2665B6),
+          scaffoldBackgroundColor: const Color(0xFFF5F5F5),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF2665B6),
+            primary: const Color(0xFF2665B6),
+            secondary: const Color(0xFFC1E1FF),
+          ),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Color(0xFF2665B6),
+            foregroundColor: Colors.white,
+            elevation: 0,
+          ),
         ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF2665B6),
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
+        home: const EntryPoint(),
+        routes: {
+          '/login': (context) => LoginScreen(),
+          '/register': (context) => const RegisterScreen(),
+          '/profile': (context) => const ProfileScreen(),
+          '/home': (context) => const HomeScreen(),
+          '/settings': (context) => const SettingsScreen(),
+          '/scan': (context) => const QRScannerScreen(),
+          '/message': (context) => const MessageViewScreen(),
+        },
       ),
-      initialRoute: isLoggedIn ? '/home' : '/login',
-      routes: {
-        '/login': (context) => const LoginScreen(),
-        '/register': (context) => const RegisterScreen(),
-        '/profile': (context) => const ProfileScreen(),
-        '/home': (context) => const HomeScreen(),
-        '/settings': (context) => const SettingsScreen(),
-        '/scan': (context) => const QRScannerScreen(),
-        '/message': (context) => const MessageScreen(),
+    );
+  }
+}
+
+class EntryPoint extends StatelessWidget {
+  const EntryPoint({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        if (state.isLoading) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        return state.isLoggedIn ? const HomeScreen() : LoginScreen();
       },
     );
   }
