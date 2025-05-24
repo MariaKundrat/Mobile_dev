@@ -61,8 +61,7 @@ class QRScannerCubit extends Cubit<QRScannerState> {
     _port?.inputStream?.listen((Uint8List data) {
       final String response = String.fromCharCodes(data).trim();
       if (response.isNotEmpty) {
-        // You could emit another state here if needed
-        print('ESP32: $response');
+        // print('ESP32: $response');
       }
     });
   }

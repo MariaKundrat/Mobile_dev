@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab1/cubit/settings_cubit.dart';
+import 'package:lab1/cubit/cubits/settings_cubit.dart';
 import 'package:lab1/cubit/states/settings_state.dart';
 import 'package:lab1/presentation/widgets/custom_button.dart';
 
@@ -38,7 +38,7 @@ class SettingsScreen extends StatelessWidget {
                 CustomButton(
                   text: 'Save Settings',
                   onPressed: () {
-                    cubit.saveSettings(); // Hook for persistence
+                    cubit.saveSettings();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Settings saved')),
                     );

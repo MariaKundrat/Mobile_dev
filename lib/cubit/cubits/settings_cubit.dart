@@ -12,8 +12,5 @@ class SettingsCubit extends Cubit<SettingsState> {
     emit(state.copyWith(darkModeEnabled: value));
   }
 
-  void saveSettings() {
-    // Here you could persist settings to storage if needed.
-    // This is just a placeholder for future logic.
-  }
+  void saveSettings() {}
 }

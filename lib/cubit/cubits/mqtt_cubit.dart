@@ -20,7 +20,6 @@ class MqttCubit extends Cubit<MqttState> {
 
   Future<void> _connect() async {
     await _mqttService.connect();
-    // Optionally handle connection state here as well.
   }
 
   void requestTemperature() {

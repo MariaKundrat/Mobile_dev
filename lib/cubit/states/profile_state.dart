@@ -1,4 +1,4 @@
-part of '../profile_cubit.dart';
+part of '../cubits/profile_cubit.dart';
 
 abstract class ProfileState {}
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab1/cubit/qr_scanner_cubit.dart';
+import 'package:lab1/cubit/cubits/qr_scanner_cubit.dart';
 import 'package:lab1/cubit/states/qr_scanner_state.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 

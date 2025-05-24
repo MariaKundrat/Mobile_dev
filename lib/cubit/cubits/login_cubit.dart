@@ -1,4 +1,3 @@
-// lib/cubit/login_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lab1/cubit/states/login_state.dart';
 import 'package:lab1/services/auth_service.dart';
@@ -18,14 +17,13 @@ class LoginCubit extends Cubit<LoginState> {
       return;
     }
 
-    // AuthService.validateCredentials повертає Future<bool>
     final success = await AuthService.validateCredentials(email, password);
     if (success) {
       if (rememberMe) {
         await AuthService.saveCredentials(email, password);
         await AuthService.setLoggedIn(true);
       }
-      emit(LoginSuccess());        // <-- без аргументів
+      emit(LoginSuccess());
     } else {
       emit(LoginFailure('Invalid credentials'));
     }
@@ -37,7 +35,7 @@ class LoginCubit extends Cubit<LoginState> {
 
     final success = await AuthService.loginWithSavedCredentials();
     if (success) {
-      emit(LoginSuccess());        // <-- без аргументів
+      emit(LoginSuccess());
     }
   }
 }

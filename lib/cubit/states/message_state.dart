@@ -1,4 +1,4 @@
-part of '../message_cubit.dart';
+import 'package:equatable/equatable.dart';
 
 abstract class MessageState extends Equatable {
   const MessageState();

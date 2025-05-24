@@ -1,10 +1,9 @@
 import 'dart:typed_data';
+
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:lab1/cubit/states/message_state.dart';
 import 'package:usb_serial/transaction.dart';
 import 'package:usb_serial/usb_serial.dart';
-
-part 'states/message_state.dart';
 
 class MessageCubit extends Cubit<MessageState> {
   MessageCubit() : super(MessageInitial());

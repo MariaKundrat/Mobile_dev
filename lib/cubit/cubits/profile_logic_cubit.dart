@@ -5,7 +5,6 @@ import 'package:lab1/data/repositories/user_repository_impl.dart';
 import 'package:lab1/domain/entities/user.dart';
 import 'package:lab1/domain/repositories/user_repository.dart';
 
-
 class ProfileCubit extends Cubit<ProfileState> {
   final UserRepository _repository;
 
