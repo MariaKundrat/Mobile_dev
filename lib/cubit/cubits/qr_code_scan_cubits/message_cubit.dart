@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
-import 'package:lab1/cubit/states/message_state.dart';
+import 'package:lab1/cubit/states/qr_code_scan_states/message_state.dart';
 import 'package:usb_serial/transaction.dart';
 import 'package:usb_serial/usb_serial.dart';
 

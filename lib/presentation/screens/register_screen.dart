@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab1/cubit/cubits/register_cubit.dart';
-import 'package:lab1/cubit/states/register_state.dart';
+import 'package:lab1/cubit/cubits/register_cubits/register_cubit.dart';
+import 'package:lab1/cubit/states/register_states/register_state.dart';
 import 'package:lab1/presentation/widgets/custom_button.dart';
 import 'package:lab1/presentation/widgets/custom_text_field.dart';
 
