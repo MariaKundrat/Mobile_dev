@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab1/cubit/cubits/qr_code_scan_cubits/qr_scanner_cubit.dart';
-import 'package:lab1/cubit/states/qr_code_scan_states/qr_scanner_state.dart';
+import 'package:lab1/cubit/qr_code_scan/qr_scanner_cubit.dart';
+import 'package:lab1/cubit/qr_code_scan/qr_scanner_state.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class QRScannerScreen extends StatelessWidget {

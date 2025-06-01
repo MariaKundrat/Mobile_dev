@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab1/cubit/cubits/home_cubits/settings_cubit.dart';
-import 'package:lab1/cubit/states/home_states/settings_state.dart';
+import 'package:lab1/cubit/home/settings_cubit.dart';
+import 'package:lab1/cubit/home/settings_state.dart';
 import 'package:lab1/presentation/widgets/custom_button.dart';
 
 class SettingsScreen extends StatelessWidget {

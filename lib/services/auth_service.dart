@@ -1,7 +1,49 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lab1/data/repositories/user_repository_impl.dart';
 import 'package:lab1/domain/entities/user.dart';
 import 'package:lab1/domain/repositories/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+enum AuthStatus { unknown, authenticated, unauthenticated, loading, error }
+
+class AuthServiceState {
+  final AuthStatus status;
+  final String? errorMessage;
+
+  AuthServiceState(this.status, {this.errorMessage});
+}
+
+class AuthServiceCubit extends Cubit<AuthServiceState> {
+  AuthServiceCubit() : super(AuthServiceState(AuthStatus.unknown));
+
+  Future<void> checkLoginStatus() async {
+    emit(AuthServiceState(AuthStatus.loading));
+    final loggedIn = await AuthService.isUserLoggedIn();
+    if (loggedIn) {
+      emit(AuthServiceState(AuthStatus.authenticated));
+    } else {
+      emit(AuthServiceState(AuthStatus.unauthenticated));
+    }
+  }
+
+  Future<void> login(String username, String password) async {
+    emit(AuthServiceState(AuthStatus.loading));
+    final success = await AuthService.validateCredentials(username, password);
+    if (success) {
+      await AuthService.setLoggedIn(true);
+      await AuthService.saveCredentials(username, password);
+      emit(AuthServiceState(AuthStatus.authenticated));
+    } else {
+      emit(AuthServiceState(AuthStatus.error,
+          errorMessage: 'Invalid credentials',),);
+    }
+  }
+
+  Future<void> logout() async {
+    await AuthService.logout();
+    emit(AuthServiceState(AuthStatus.unauthenticated));
+  }
+}
 
 class AuthService {
   static final UserRepository _repository = UserRepositoryImpl();

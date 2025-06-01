@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab1/cubit/cubits/home_cubits/home_cubit.dart';
-import 'package:lab1/cubit/states/home_states/home_state.dart';
+import 'package:lab1/cubit/home/home_cubit.dart';
+import 'package:lab1/cubit/home/home_state.dart';
 import 'package:lab1/presentation/screens/message_view_screen.dart';
 import 'package:lab1/presentation/screens/qr_scanner_screen.dart';
 import 'package:lab1/presentation/widgets/custom_button.dart';

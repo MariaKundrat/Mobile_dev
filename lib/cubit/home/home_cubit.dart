@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab1/cubit/states/home_states/home_state.dart';
+import 'package:lab1/cubit/home/home_state.dart';
 import 'package:lab1/services/connection_service.dart';
 import 'package:lab1/services/mqtt_service.dart';
 
@@ -13,12 +13,14 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit({
     required this.mqttService,
     required this.connectivityService,
-  }) : super(const HomeState(
-          temperature: 36.6,
-          isCelsius: true,
-          brightness: 0.5,
-          isConnected: false,
-        ),) {
+  }) : super(
+          const HomeState(
+            temperature: 36.6,
+            isCelsius: true,
+            brightness: 0.5,
+            isConnected: false,
+          ),
+        ) {
     _init();
   }
 
@@ -46,10 +48,12 @@ class HomeCubit extends Cubit<HomeState> {
     } else {
       temp = (temp - 32) * 5 / 9;
     }
-    emit(state.copyWith(
-      temperature: temp,
-      isCelsius: !state.isCelsius,
-    ),);
+    emit(
+      state.copyWith(
+        temperature: temp,
+        isCelsius: !state.isCelsius,
+      ),
+    );
   }
 
   void changeBrightness(double value) {

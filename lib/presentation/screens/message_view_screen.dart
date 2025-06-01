@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab1/cubit/cubits/qr_code_scan_cubits/message_cubit.dart';
-import 'package:lab1/cubit/states/qr_code_scan_states/message_state.dart';
+import 'package:lab1/cubit/qr_code_scan/message_cubit.dart';
+import 'package:lab1/cubit/qr_code_scan/message_state.dart';
 
 class MessageViewScreen extends StatelessWidget {
   const MessageViewScreen({super.key});

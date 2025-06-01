@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab1/cubit/states/qr_code_scan_states/qr_scanner_state.dart';
+import 'package:lab1/cubit/qr_code_scan/qr_scanner_state.dart';
 import 'package:usb_serial/usb_serial.dart';
 
 class QRScannerCubit extends Cubit<QRScannerState> {

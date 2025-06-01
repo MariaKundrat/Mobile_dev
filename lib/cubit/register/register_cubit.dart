@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab1/cubit/states/register_states/register_state.dart';
+import 'package:lab1/cubit/register/register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
   RegisterCubit() : super(const RegisterState());
@@ -40,17 +40,19 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(state.copyWith(isSubmitting: true));
 
     try {
-
-      emit(state.copyWith(
-        isSubmitting: false,
-      ),);
+      emit(
+        state.copyWith(
+          isSubmitting: false,
+        ),
+      );
       return;
-
     } catch (e) {
-      emit(state.copyWith(
-        isSubmitting: false,
-        errorMessage: 'Error during registration: $e',
-      ),);
+      emit(
+        state.copyWith(
+          isSubmitting: false,
+          errorMessage: 'Error during registration: $e',
+        ),
+      );
     }
   }
 }

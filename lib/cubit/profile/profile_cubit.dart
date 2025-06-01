@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lab1/cubit/profile/profile_logic_state.dart';
 import 'package:lab1/domain/entities/user.dart';
 import 'package:lab1/services/auth_service.dart';
-
-part '../../states/profile_states/profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit() : super(ProfileLoading()) {

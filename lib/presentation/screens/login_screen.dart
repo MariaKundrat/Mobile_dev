@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab1/cubit/cubits/login_cubits/login_cubit.dart';
-import 'package:lab1/cubit/states/login_states/login_state.dart';
+import 'package:lab1/cubit/login/login_cubit.dart';
+import 'package:lab1/cubit/login/login_state.dart';
 import 'package:lab1/presentation/widgets/custom_button.dart';
 import 'package:lab1/services/connection_service.dart';
 

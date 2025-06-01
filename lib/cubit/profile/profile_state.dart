@@ -1,4 +1,4 @@
-part of '../../cubits/profile_cubits/profile_cubit.dart';
+import 'package:lab1/domain/entities/user.dart';
 
 abstract class ProfileState {}
 

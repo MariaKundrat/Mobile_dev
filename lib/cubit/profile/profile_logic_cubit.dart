@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab1/cubit/states/profile_states/profile_logic_state.dart';
+import 'package:lab1/cubit/profile/profile_logic_state.dart';
 import 'package:lab1/data/repositories/user_repository_impl.dart';
 import 'package:lab1/domain/entities/user.dart';
 import 'package:lab1/domain/repositories/user_repository.dart';
@@ -20,7 +20,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     nameController.text = user.name;
     emailController.text = user.email;
     passwordController.text = user.password;
-    emit(ProfileLoaded(user));
+    emit(ProfileLoaded(user: user));
   }
 
   Future<void> saveChanges(GlobalKey<FormState> formKey) async {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lab1/cubit/cubits/auth_cubits/auth_cubit.dart';
+import 'package:lab1/cubit/auth/auth_cubit.dart';
+import 'package:lab1/cubit/auth/auth_state.dart';
 import 'package:lab1/presentation/screens/home_screen.dart';
 import 'package:lab1/presentation/screens/login_screen.dart';
 import 'package:lab1/presentation/screens/message_view_screen.dart';
